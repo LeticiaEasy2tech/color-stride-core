@@ -10,12 +10,18 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as PipelineTrackingRouteImport } from './routes/pipeline.tracking'
 import { Route as EstimatingEstimatesRouteImport } from './routes/estimating.estimates'
 import { Route as CrmCustomersRouteImport } from './routes/crm.customers'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PipelineTrackingRoute = PipelineTrackingRouteImport.update({
+  id: '/pipeline/tracking',
+  path: '/pipeline/tracking',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EstimatingEstimatesRoute = EstimatingEstimatesRouteImport.update({
@@ -33,30 +39,43 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/crm/customers': typeof CrmCustomersRoute
   '/estimating/estimates': typeof EstimatingEstimatesRoute
+  '/pipeline/tracking': typeof PipelineTrackingRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/crm/customers': typeof CrmCustomersRoute
   '/estimating/estimates': typeof EstimatingEstimatesRoute
+  '/pipeline/tracking': typeof PipelineTrackingRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/crm/customers': typeof CrmCustomersRoute
   '/estimating/estimates': typeof EstimatingEstimatesRoute
+  '/pipeline/tracking': typeof PipelineTrackingRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/crm/customers' | '/estimating/estimates'
+  fullPaths:
+    | '/'
+    | '/crm/customers'
+    | '/estimating/estimates'
+    | '/pipeline/tracking'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/crm/customers' | '/estimating/estimates'
-  id: '__root__' | '/' | '/crm/customers' | '/estimating/estimates'
+  to: '/' | '/crm/customers' | '/estimating/estimates' | '/pipeline/tracking'
+  id:
+    | '__root__'
+    | '/'
+    | '/crm/customers'
+    | '/estimating/estimates'
+    | '/pipeline/tracking'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CrmCustomersRoute: typeof CrmCustomersRoute
   EstimatingEstimatesRoute: typeof EstimatingEstimatesRoute
+  PipelineTrackingRoute: typeof PipelineTrackingRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -66,6 +85,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pipeline/tracking': {
+      id: '/pipeline/tracking'
+      path: '/pipeline/tracking'
+      fullPath: '/pipeline/tracking'
+      preLoaderRoute: typeof PipelineTrackingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/estimating/estimates': {
@@ -89,6 +115,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CrmCustomersRoute: CrmCustomersRoute,
   EstimatingEstimatesRoute: EstimatingEstimatesRoute,
+  PipelineTrackingRoute: PipelineTrackingRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
