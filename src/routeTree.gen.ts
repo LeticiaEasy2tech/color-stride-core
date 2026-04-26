@@ -10,33 +10,102 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ProjectsActiveRouteImport } from './routes/projects.active'
+import { Route as PipelineTrackingRouteImport } from './routes/pipeline.tracking'
+import { Route as FinancialInvoicesRouteImport } from './routes/financial.invoices'
+import { Route as EstimatingEstimatesRouteImport } from './routes/estimating.estimates'
+import { Route as CrmCustomersRouteImport } from './routes/crm.customers'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProjectsActiveRoute = ProjectsActiveRouteImport.update({
+  id: '/projects/active',
+  path: '/projects/active',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PipelineTrackingRoute = PipelineTrackingRouteImport.update({
+  id: '/pipeline/tracking',
+  path: '/pipeline/tracking',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FinancialInvoicesRoute = FinancialInvoicesRouteImport.update({
+  id: '/financial/invoices',
+  path: '/financial/invoices',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EstimatingEstimatesRoute = EstimatingEstimatesRouteImport.update({
+  id: '/estimating/estimates',
+  path: '/estimating/estimates',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CrmCustomersRoute = CrmCustomersRouteImport.update({
+  id: '/crm/customers',
+  path: '/crm/customers',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/crm/customers': typeof CrmCustomersRoute
+  '/estimating/estimates': typeof EstimatingEstimatesRoute
+  '/financial/invoices': typeof FinancialInvoicesRoute
+  '/pipeline/tracking': typeof PipelineTrackingRoute
+  '/projects/active': typeof ProjectsActiveRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/crm/customers': typeof CrmCustomersRoute
+  '/estimating/estimates': typeof EstimatingEstimatesRoute
+  '/financial/invoices': typeof FinancialInvoicesRoute
+  '/pipeline/tracking': typeof PipelineTrackingRoute
+  '/projects/active': typeof ProjectsActiveRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/crm/customers': typeof CrmCustomersRoute
+  '/estimating/estimates': typeof EstimatingEstimatesRoute
+  '/financial/invoices': typeof FinancialInvoicesRoute
+  '/pipeline/tracking': typeof PipelineTrackingRoute
+  '/projects/active': typeof ProjectsActiveRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/crm/customers'
+    | '/estimating/estimates'
+    | '/financial/invoices'
+    | '/pipeline/tracking'
+    | '/projects/active'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/crm/customers'
+    | '/estimating/estimates'
+    | '/financial/invoices'
+    | '/pipeline/tracking'
+    | '/projects/active'
+  id:
+    | '__root__'
+    | '/'
+    | '/crm/customers'
+    | '/estimating/estimates'
+    | '/financial/invoices'
+    | '/pipeline/tracking'
+    | '/projects/active'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CrmCustomersRoute: typeof CrmCustomersRoute
+  EstimatingEstimatesRoute: typeof EstimatingEstimatesRoute
+  FinancialInvoicesRoute: typeof FinancialInvoicesRoute
+  PipelineTrackingRoute: typeof PipelineTrackingRoute
+  ProjectsActiveRoute: typeof ProjectsActiveRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +117,51 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/projects/active': {
+      id: '/projects/active'
+      path: '/projects/active'
+      fullPath: '/projects/active'
+      preLoaderRoute: typeof ProjectsActiveRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pipeline/tracking': {
+      id: '/pipeline/tracking'
+      path: '/pipeline/tracking'
+      fullPath: '/pipeline/tracking'
+      preLoaderRoute: typeof PipelineTrackingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/financial/invoices': {
+      id: '/financial/invoices'
+      path: '/financial/invoices'
+      fullPath: '/financial/invoices'
+      preLoaderRoute: typeof FinancialInvoicesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/estimating/estimates': {
+      id: '/estimating/estimates'
+      path: '/estimating/estimates'
+      fullPath: '/estimating/estimates'
+      preLoaderRoute: typeof EstimatingEstimatesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/crm/customers': {
+      id: '/crm/customers'
+      path: '/crm/customers'
+      fullPath: '/crm/customers'
+      preLoaderRoute: typeof CrmCustomersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CrmCustomersRoute: CrmCustomersRoute,
+  EstimatingEstimatesRoute: EstimatingEstimatesRoute,
+  FinancialInvoicesRoute: FinancialInvoicesRoute,
+  PipelineTrackingRoute: PipelineTrackingRoute,
+  ProjectsActiveRoute: ProjectsActiveRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
