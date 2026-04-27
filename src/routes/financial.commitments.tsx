@@ -1,9 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useMemo } from "react";
 import { PageHeader } from "@/components/app/page-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
+import { FilterBar, useFilterBar } from "@/components/app/filter-bar";
 
 export const Route = createFileRoute("/financial/commitments")({
   component: Commitments,
@@ -18,6 +20,16 @@ const items = [
 ];
 
 function Commitments() {
+  const [filters, setFilters] = useFilterBar();
+  const visible = useMemo(() => {
+    const q = filters.search.trim().toLowerCase();
+    return items.filter((c) => {
+      if (q && !`${c.id} ${c.vendor} ${c.project} ${c.type}`.toLowerCase().includes(q)) return false;
+      if (filters.status === "open" && c.status !== "Open") return false;
+      if (filters.status === "closed" && c.status !== "Closed") return false;
+      return true;
+    });
+  }, [filters]);
   return (
     <div className="space-y-6">
       <PageHeader
@@ -29,6 +41,7 @@ function Commitments() {
           </Button>
         }
       />
+      <FilterBar value={filters} onChange={setFilters} searchPlaceholder="Search commitments…" />
       <Card className="border-border shadow-[var(--shadow-card)]">
         <CardHeader className="pb-2"><CardTitle className="text-sm">Open Commitments</CardTitle></CardHeader>
         <CardContent className="p-0">
@@ -45,7 +58,7 @@ function Commitments() {
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
-              {items.map((c) => (
+              {visible.map((c) => (
                 <tr key={c.id} className="hover:bg-muted/30">
                   <td className="px-4 py-2.5 font-mono text-xs">{c.id}</td>
                   <td className="px-4 py-2.5">{c.type}</td>
