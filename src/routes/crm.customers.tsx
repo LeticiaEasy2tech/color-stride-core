@@ -1,12 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader } from "@/components/app/page-header";
 import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { customers } from "@/lib/mock-data";
-import { Search, Plus, Building2, Phone, Mail, MapPin } from "lucide-react";
+import { Plus, Building2, Phone, Mail, MapPin } from "lucide-react";
+import { FilterBar, useFilterBar } from "@/components/app/filter-bar";
+import { useMemo } from "react";
 
 export const Route = createFileRoute("/crm/customers")({
   component: CustomersPage,
@@ -14,6 +15,16 @@ export const Route = createFileRoute("/crm/customers")({
 });
 
 function CustomersPage() {
+  const [filters, setFilters] = useFilterBar();
+  const filtered = useMemo(() => {
+    const q = filters.search.trim().toLowerCase();
+    return customers.filter((c) => {
+      if (q && !`${c.name} ${c.first} ${c.last} ${c.email} ${c.city}`.toLowerCase().includes(q)) return false;
+      if (filters.client !== "all" && !c.name.toLowerCase().includes(filters.client)) return false;
+      if (filters.view === "my-open-jobs" && !c.active) return false;
+      return true;
+    });
+  }, [filters]);
   return (
     <div className="space-y-6">
       <PageHeader
@@ -26,15 +37,16 @@ function CustomersPage() {
         }
       />
 
+      <FilterBar
+        value={filters}
+        onChange={setFilters}
+        searchPlaceholder="Search customers, contacts, cities…"
+      />
+
       <Card className="border-border shadow-[var(--shadow-card)]">
         <CardContent className="p-4 space-y-4">
           <div className="flex flex-wrap items-center gap-2">
-            <div className="relative flex-1 min-w-[220px] max-w-sm">
-              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input placeholder="Search customers" className="pl-8 h-9" />
-            </div>
-            <Button variant="outline" size="sm" className="h-9">All fields</Button>
-            <Button variant="outline" size="sm" className="h-9">Contains</Button>
+            <span className="text-xs text-muted-foreground">{filtered.length} of {customers.length} customers</span>
             <Button variant="outline" size="sm" className="h-9 ml-auto">Columns</Button>
             <Button variant="outline" size="sm" className="h-9">Export</Button>
           </div>
@@ -61,7 +73,7 @@ function CustomersPage() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-border">
-                    {customers.map((c) => (
+                    {filtered.map((c) => (
                       <tr key={c.id} className="hover:bg-muted/30 cursor-pointer">
                         <td className="px-3 py-2.5 text-muted-foreground">{c.id}</td>
                         <td className="px-3 py-2.5 font-medium text-foreground">{c.name}</td>
@@ -86,7 +98,7 @@ function CustomersPage() {
             </TabsContent>
             <TabsContent value="cards" className="mt-3">
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
-                {customers.map((c) => (
+                {filtered.map((c) => (
                   <Card key={c.id} className="border-border hover:shadow-[var(--shadow-elev)] transition-shadow cursor-pointer">
                     <CardContent className="p-4 space-y-2">
                       <div className="flex items-center gap-2">
