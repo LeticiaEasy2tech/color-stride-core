@@ -1,9 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useMemo } from "react";
 import { PageHeader } from "@/components/app/page-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Plus, FileCheck } from "lucide-react";
+import { FilterBar, useFilterBar } from "@/components/app/filter-bar";
 
 export const Route = createFileRoute("/projects/submittals")({
   component: Submittals,
@@ -24,6 +26,16 @@ const tone: Record<string, string> = {
 };
 
 function Submittals() {
+  const [filters, setFilters] = useFilterBar();
+  const visible = useMemo(() => {
+    const q = filters.search.trim().toLowerCase();
+    return subs.filter((s) => {
+      if (q && !`${s.id} ${s.item} ${s.project}`.toLowerCase().includes(q)) return false;
+      if (filters.status === "approved" && s.status !== "Approved") return false;
+      if (filters.status === "pending" && s.status !== "Pending") return false;
+      return true;
+    });
+  }, [filters]);
   return (
     <div className="space-y-6">
       <PageHeader
@@ -35,8 +47,9 @@ function Submittals() {
           </Button>
         }
       />
+      <FilterBar value={filters} onChange={setFilters} searchPlaceholder="Search submittals…" />
       <div className="grid gap-3">
-        {subs.map((s) => (
+        {visible.map((s) => (
           <Card key={s.id} className="border-border shadow-[var(--shadow-card)]">
             <CardHeader className="pb-2 flex flex-row items-center justify-between">
               <CardTitle className="text-sm flex items-center gap-2">
