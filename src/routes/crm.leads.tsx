@@ -1,9 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useMemo } from "react";
 import { PageHeader } from "@/components/app/page-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Plus, Flame, Snowflake, Thermometer } from "lucide-react";
+import { FilterBar, useFilterBar } from "@/components/app/filter-bar";
 
 export const Route = createFileRoute("/crm/leads")({
   component: Leads,
@@ -26,6 +28,18 @@ const scoreClass: Record<string, string> = {
 };
 
 function Leads() {
+  const [filters, setFilters] = useFilterBar();
+
+  const visible = useMemo(() => {
+    const q = filters.search.trim().toLowerCase();
+    return leads.filter((l) => {
+      if (q && !`${l.id} ${l.name} ${l.source} ${l.stage}`.toLowerCase().includes(q)) return false;
+      if (filters.status === "open" && l.stage === "Closed") return false;
+      if (filters.status === "pending" && l.stage !== "Qualifying") return false;
+      return true;
+    });
+  }, [filters]);
+
   return (
     <div className="space-y-6">
       <PageHeader
@@ -37,6 +51,7 @@ function Leads() {
           </Button>
         }
       />
+      <FilterBar value={filters} onChange={setFilters} searchPlaceholder="Search leads…" />
       <Card className="border-border shadow-[var(--shadow-card)]">
         <CardHeader className="pb-2"><CardTitle className="text-sm">All Leads</CardTitle></CardHeader>
         <CardContent className="p-0">
@@ -53,7 +68,7 @@ function Leads() {
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
-              {leads.map((l) => {
+              {visible.map((l) => {
                 const Icon = scoreIcon[l.score as keyof typeof scoreIcon];
                 return (
                   <tr key={l.id} className="hover:bg-muted/30">
