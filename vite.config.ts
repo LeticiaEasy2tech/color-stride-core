@@ -19,5 +19,10 @@ export default defineConfig({
       host: "0.0.0.0",
       port: 5000,
     },
+    preview: {
+      allowedHosts: true,
+      host: "0.0.0.0",
+      port: process.env.PORT ? Number(process.env.PORT) : undefined,
+    },
   },
 });
