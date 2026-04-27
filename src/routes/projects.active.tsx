@@ -6,6 +6,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { projects, budgetVsActual } from "@/lib/mock-data";
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis, Legend } from "recharts";
+import { FilterBar, useFilterBar } from "@/components/app/filter-bar";
+import { useMemo } from "react";
 
 const statusColor: Record<string, string> = {
   "To be Scheduled": "bg-[var(--warning)]/15 text-[oklch(0.5_0.16_75)]",
@@ -15,9 +17,36 @@ const statusColor: Record<string, string> = {
 };
 
 export const Route = createFileRoute("/projects/active")({
-  component: () => (
+  component: ActiveJobs,
+});
+
+function ActiveJobs() {
+  const [filters, setFilters] = useFilterBar();
+  const filtered = useMemo(() => {
+    const q = filters.search.trim().toLowerCase();
+    return projects.filter((p) => {
+      if (q && !`${p.name} ${p.gc} ${p.estimator}`.toLowerCase().includes(q)) return false;
+      if (filters.status === "active" && !["In Progress", "To be Scheduled"].includes(p.status)) return false;
+      if (filters.status === "closed" && p.status !== "Closed/Paid") return false;
+      if (filters.view === "my-open-jobs" && p.status === "Closed/Paid") return false;
+      if (filters.view === "pending-co" && p.co === 0) return false;
+      return true;
+    });
+  }, [filters]);
+  return (
     <div className="space-y-6">
       <PageHeader title="Active Jobs" description="All projects in execution." />
+      <FilterBar
+        value={filters}
+        onChange={setFilters}
+        searchPlaceholder="Search projects, GCs, estimators…"
+        statusOptions={[
+          { value: "all", label: "All statuses" },
+          { value: "active", label: "In Progress" },
+          { value: "pending", label: "To be Scheduled" },
+          { value: "closed", label: "Closed / Paid" },
+        ]}
+      />
       <Tabs defaultValue="overview">
         <TabsList>
           <TabsTrigger value="overview">Overview</TabsTrigger>
@@ -45,7 +74,7 @@ export const Route = createFileRoute("/projects/active")({
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border">
-                  {projects.map((p) => (
+                  {filtered.map((p) => (
                     <tr key={p.id} className="hover:bg-muted/30">
                       <td className="px-4 py-2.5 text-muted-foreground font-mono text-xs">{p.id}</td>
                       <td className="px-4 py-2.5 font-medium">{p.name}</td>
@@ -69,7 +98,7 @@ export const Route = createFileRoute("/projects/active")({
           <Card className="border-border shadow-[var(--shadow-card)]">
             <CardContent className="p-6">
               <div className="space-y-3">
-                {projects.map((p, i) => (
+                {filtered.map((p, i) => (
                   <div key={p.id} className="flex items-center gap-3">
                     <div className="w-56 text-sm font-medium truncate">{p.name}</div>
                     <div className="flex-1 h-6 bg-muted rounded relative">
@@ -129,5 +158,5 @@ export const Route = createFileRoute("/projects/active")({
         </TabsContent>
       </Tabs>
     </div>
-  ),
-});
+  );
+}
