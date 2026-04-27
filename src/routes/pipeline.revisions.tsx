@@ -1,8 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useMemo } from "react";
 import { PageHeader } from "@/components/app/page-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { History, ArrowRight } from "lucide-react";
+import { FilterBar, useFilterBar } from "@/components/app/filter-bar";
 
 export const Route = createFileRoute("/pipeline/revisions")({
   component: Revisions,
@@ -16,11 +18,20 @@ const revisions = [
 ];
 
 function Revisions() {
+  const [filters, setFilters] = useFilterBar();
+  const visible = useMemo(() => {
+    const q = filters.search.trim().toLowerCase();
+    return revisions.filter((r) => {
+      if (q && !`${r.id} ${r.title} ${r.customer} ${r.reason}`.toLowerCase().includes(q)) return false;
+      return true;
+    });
+  }, [filters]);
   return (
     <div className="space-y-6">
       <PageHeader title="Revisions" description="Every estimate revision with diff and reason." />
+      <FilterBar value={filters} onChange={setFilters} searchPlaceholder="Search revisions…" />
       <div className="grid gap-3">
-        {revisions.map((r) => (
+        {visible.map((r) => (
           <Card key={r.id} className="border-border shadow-[var(--shadow-card)]">
             <CardHeader className="pb-2 flex flex-row items-center justify-between">
               <CardTitle className="text-sm flex items-center gap-2">

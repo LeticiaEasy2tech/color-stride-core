@@ -26,9 +26,10 @@ function ActiveJobs() {
     const q = filters.search.trim().toLowerCase();
     return projects.filter((p) => {
       if (q && !`${p.name} ${p.gc} ${p.estimator}`.toLowerCase().includes(q)) return false;
-      if (filters.status === "active" && !["In Progress", "To be Scheduled"].includes(p.status)) return false;
+      if (filters.status === "open" && !["In Progress", "To be Scheduled"].includes(p.status)) return false;
       if (filters.status === "closed" && p.status !== "Closed/Paid") return false;
-      if (filters.view === "my-open-jobs" && p.status === "Closed/Paid") return false;
+      if (filters.view === "my-open-items" && p.status === "Closed/Paid") return false;
+      if (filters.view === "active-jobs" && p.status === "Closed/Paid") return false;
       if (filters.view === "pending-co" && p.co === 0) return false;
       return true;
     });

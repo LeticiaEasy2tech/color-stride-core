@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useMemo } from "react";
 import { PageHeader } from "@/components/app/page-header";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -7,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { customers } from "@/lib/mock-data";
 import { Mail, Phone, Plus, Search } from "lucide-react";
+import { FilterBar, useFilterBar } from "@/components/app/filter-bar";
 
 export const Route = createFileRoute("/crm/contacts")({
   component: Contacts,
@@ -14,6 +16,16 @@ export const Route = createFileRoute("/crm/contacts")({
 });
 
 function Contacts() {
+  const [filters, setFilters] = useFilterBar();
+
+  const visible = useMemo(() => {
+    const q = filters.search.trim().toLowerCase();
+    return customers.filter((c) => {
+      if (q && !`${c.first} ${c.last} ${c.name} ${c.email}`.toLowerCase().includes(q)) return false;
+      return true;
+    });
+  }, [filters]);
+
   return (
     <div className="space-y-6">
       <PageHeader
@@ -25,15 +37,16 @@ function Contacts() {
           </Button>
         }
       />
+      <FilterBar value={filters} onChange={setFilters} searchPlaceholder="Search contacts…" />
       <div className="flex items-center gap-2">
         <div className="relative max-w-sm flex-1">
           <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input placeholder="Search contacts…" className="pl-8 h-9" />
         </div>
-        <Badge variant="secondary">{customers.length} contacts</Badge>
+        <Badge variant="secondary">{visible.length} contacts</Badge>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
-        {customers.map((c) => (
+        {visible.map((c) => (
           <Card key={c.id} className="border-border shadow-[var(--shadow-card)]">
             <CardContent className="p-4 flex items-start gap-3">
               <Avatar className="h-10 w-10">

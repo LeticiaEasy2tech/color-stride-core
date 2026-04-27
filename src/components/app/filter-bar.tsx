@@ -48,28 +48,34 @@ export type SavedView = {
 export const DEFAULT_SAVED_VIEWS: SavedView[] = [
   { id: "all", label: "All records", filters: {} },
   {
-    id: "my-open-jobs",
-    label: "My Open Jobs",
-    description: "Active jobs assigned to me",
-    filters: { status: "active" },
+    id: "my-open-items",
+    label: "My Open Items",
+    description: "Items currently open and assigned to me",
+    filters: { status: "open" },
   },
   {
     id: "pending-co",
     label: "Pending Change Orders",
     description: "Change orders awaiting approval",
-    filters: { status: "pending", category: "change-order" },
+    filters: { status: "pending", category: "pm" },
   },
   {
     id: "awarded-month",
     label: "Awarded This Month",
     description: "Won proposals in the last 30 days",
-    filters: { status: "awarded", dateRange: "30d" },
+    filters: { status: "awarded", dateRange: "month" },
   },
   {
     id: "overdue-billing",
     label: "Overdue Billing",
     description: "Invoices past due date",
-    filters: { status: "overdue", category: "billing" },
+    filters: { status: "overdue", category: "financial" },
+  },
+  {
+    id: "active-jobs",
+    label: "Active Jobs",
+    description: "Jobs currently in progress",
+    filters: { status: "open", category: "pm" },
   },
 ];
 
@@ -89,36 +95,44 @@ export type FilterBarProps = {
 
 const DEFAULT_DATE_OPTIONS: Option[] = [
   { value: "any", label: "Any time" },
-  { value: "7d", label: "Last 7 days" },
-  { value: "30d", label: "Last 30 days" },
-  { value: "qtd", label: "Quarter to date" },
-  { value: "ytd", label: "Year to date" },
+  { value: "today", label: "Today" },
+  { value: "week", label: "This Week" },
+  { value: "month", label: "This Month" },
+  { value: "30d", label: "Last 30 Days" },
+  { value: "quarter", label: "This Quarter" },
+  { value: "custom", label: "Custom" },
 ];
 
 const DEFAULT_CLIENT_OPTIONS: Option[] = [
   { value: "all", label: "All clients" },
   { value: "arco", label: "ARCO/Murray" },
-  { value: "winkel", label: "Winkel Construction" },
   { value: "ajax", label: "AJAX Construction" },
-  { value: "tgsv", label: "TGSV Enterprises" },
+  { value: "prescott", label: "Prescott Carpentries" },
+  { value: "tracon", label: "Tracon Construction" },
   { value: "eco", label: "Eco Building" },
 ];
 
 const DEFAULT_STATUS_OPTIONS: Option[] = [
   { value: "all", label: "All statuses" },
-  { value: "active", label: "Active" },
+  { value: "open", label: "Open" },
   { value: "pending", label: "Pending" },
+  { value: "sent", label: "Sent" },
+  { value: "revision", label: "Revision" },
   { value: "awarded", label: "Awarded" },
+  { value: "approved", label: "Approved" },
   { value: "overdue", label: "Overdue" },
   { value: "closed", label: "Closed" },
 ];
 
 const DEFAULT_CATEGORY_OPTIONS: Option[] = [
   { value: "all", label: "All categories" },
-  { value: "estimate", label: "Estimate" },
-  { value: "proposal", label: "Proposal" },
-  { value: "change-order", label: "Change Order" },
-  { value: "billing", label: "Billing" },
+  { value: "painting", label: "Painting" },
+  { value: "specialty", label: "Specialty Finishes" },
+  { value: "wallcovering", label: "Wallcovering" },
+  { value: "equipment", label: "Equipment" },
+  { value: "misc", label: "Miscellaneous" },
+  { value: "financial", label: "Financial" },
+  { value: "pm", label: "Project Management" },
 ];
 
 export function FilterBar({

@@ -1,8 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useMemo } from "react";
 import { PageHeader } from "@/components/app/page-header";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { invoices } from "@/lib/mock-data";
+import { FilterBar, useFilterBar } from "@/components/app/filter-bar";
 
 const tone: Record<string, string> = {
   Paid: "bg-[var(--success)]/15 text-[var(--success)]",
@@ -12,9 +14,25 @@ const tone: Record<string, string> = {
 };
 
 export const Route = createFileRoute("/financial/invoices")({
-  component: () => (
+  component: Invoices,
+});
+
+function Invoices() {
+  const [filters, setFilters] = useFilterBar();
+  const visible = useMemo(() => {
+    const q = filters.search.trim().toLowerCase();
+    return invoices.filter((i) => {
+      if (q && !`${i.id} ${i.project} ${i.customer}`.toLowerCase().includes(q)) return false;
+      if (filters.status === "overdue" && i.status !== "Overdue") return false;
+      if (filters.status === "sent" && i.status !== "Sent") return false;
+      if (filters.view === "overdue-billing" && i.status !== "Overdue") return false;
+      return true;
+    });
+  }, [filters]);
+  return (
     <div className="space-y-6">
       <PageHeader title="Invoices" description="All issued invoices and their status." />
+      <FilterBar value={filters} onChange={setFilters} searchPlaceholder="Search invoices…" />
       <Card className="border-border shadow-[var(--shadow-card)]">
         <CardContent className="p-0">
           <table className="w-full text-sm">
@@ -29,7 +47,7 @@ export const Route = createFileRoute("/financial/invoices")({
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
-              {invoices.map((i) => (
+              {visible.map((i) => (
                 <tr key={i.id} className="hover:bg-muted/30">
                   <td className="px-4 py-2.5 font-mono text-xs">{i.id}</td>
                   <td className="px-4 py-2.5">{i.project}</td>
@@ -46,5 +64,5 @@ export const Route = createFileRoute("/financial/invoices")({
         </CardContent>
       </Card>
     </div>
-  ),
-});
+  );
+}
