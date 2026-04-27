@@ -4,6 +4,8 @@ import { pipeline } from "@/lib/mock-data";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
 import { Calendar, GripVertical } from "lucide-react";
+import { FilterBar, useFilterBar } from "@/components/app/filter-bar";
+import { useMemo } from "react";
 
 const stageColors: Record<string, string> = {
   Pending: "bg-muted text-foreground",
@@ -15,11 +17,41 @@ const stageColors: Record<string, string> = {
 };
 
 export const Route = createFileRoute("/pipeline/tracking")({
-  component: () => (
+  component: PipelineTracking,
+});
+
+function PipelineTracking() {
+  const [filters, setFilters] = useFilterBar();
+  const filteredPipeline = useMemo(() => {
+    const q = filters.search.trim().toLowerCase();
+    const out: typeof pipeline = {} as typeof pipeline;
+    Object.entries(pipeline).forEach(([stage, cards]) => {
+      out[stage] = cards.filter((c) => {
+        if (q && !`${c.title} ${c.customer} ${c.id}`.toLowerCase().includes(q)) return false;
+        if (filters.view === "awarded-month" && stage !== "Awarded") return false;
+        if (filters.status === "awarded" && stage !== "Awarded") return false;
+        if (filters.status === "pending" && !["Pending", "Sent", "Revision"].includes(stage)) return false;
+        return true;
+      });
+    });
+    return out;
+  }, [filters]);
+  return (
     <div className="space-y-6">
       <PageHeader title="Proposal Tracking" description="Drag-and-drop pipeline. Six stages from pending to closed." />
+      <FilterBar
+        value={filters}
+        onChange={setFilters}
+        searchPlaceholder="Search proposals, customers, IDs…"
+        statusOptions={[
+          { value: "all", label: "All stages" },
+          { value: "pending", label: "Pending / Sent" },
+          { value: "awarded", label: "Awarded" },
+          { value: "closed", label: "Lost" },
+        ]}
+      />
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3">
-        {Object.entries(pipeline).map(([stage, cards]) => (
+        {Object.entries(filteredPipeline).map(([stage, cards]) => (
           <div key={stage} className="rounded-lg bg-muted/30 border border-border p-3 min-h-[400px]">
             <div className="flex items-center justify-between mb-3">
               <div className={`px-2 py-0.5 rounded-md text-xs font-semibold ${stageColors[stage]}`}>{stage}</div>
@@ -56,5 +88,5 @@ export const Route = createFileRoute("/pipeline/tracking")({
         ))}
       </div>
     </div>
-  ),
-});
+  );
+}
