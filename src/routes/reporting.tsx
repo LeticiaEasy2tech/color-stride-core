@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { BarChart3, LineChart, PieChart, Table, Download, Plus, GripVertical } from "lucide-react";
+import { FilterBar, useFilterBar } from "@/components/app/filter-bar";
 
 export const Route = createFileRoute("/reporting")({
   component: Reporting,
@@ -19,6 +20,7 @@ const presets = [
 ];
 
 function Reporting() {
+  const [filters, setFilters] = useFilterBar();
   return (
     <div className="space-y-6">
       <PageHeader
@@ -32,6 +34,18 @@ function Reporting() {
             </Button>
           </>
         }
+      />
+      <FilterBar
+        value={filters}
+        onChange={setFilters}
+        searchPlaceholder="Search reports, fields, datasets…"
+        categoryOptions={[
+          { value: "all", label: "All datasets" },
+          { value: "estimate", label: "Estimating" },
+          { value: "proposal", label: "Pipeline" },
+          { value: "billing", label: "Financials" },
+          { value: "change-order", label: "Operations" },
+        ]}
       />
       <div className="grid grid-cols-12 gap-4">
         <Card className="col-span-12 lg:col-span-3 border-border shadow-[var(--shadow-card)]">

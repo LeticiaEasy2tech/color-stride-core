@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { invoices } from "@/lib/mock-data";
 import { CircleDollarSign, Clock, FileSignature, Plus } from "lucide-react";
+import { FilterBar, useFilterBar } from "@/components/app/filter-bar";
 
 export const Route = createFileRoute("/financial/billing")({
   component: Billing,
@@ -13,6 +14,7 @@ export const Route = createFileRoute("/financial/billing")({
 });
 
 function Billing() {
+  const [filters, setFilters] = useFilterBar();
   const total = invoices.reduce((s, i) => s + i.amount, 0);
   const outstanding = invoices.filter((i) => i.status !== "Paid").reduce((s, i) => s + i.amount, 0);
   return (
@@ -25,6 +27,24 @@ function Billing() {
             <Plus className="h-4 w-4" /> New Pay App
           </Button>
         }
+      />
+      <FilterBar
+        value={filters}
+        onChange={setFilters}
+        searchPlaceholder="Search pay apps, projects, invoices…"
+        statusOptions={[
+          { value: "all", label: "All statuses" },
+          { value: "active", label: "Approved" },
+          { value: "pending", label: "Submitted" },
+          { value: "overdue", label: "Overdue" },
+          { value: "closed", label: "Paid" },
+        ]}
+        categoryOptions={[
+          { value: "all", label: "All types" },
+          { value: "billing", label: "Pay Application" },
+          { value: "change-order", label: "Change Order" },
+          { value: "estimate", label: "Retainage" },
+        ]}
       />
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <StatCard label="Billed MTD" value={`$${(total / 1000).toFixed(1)}k`} tone="accent" icon={<CircleDollarSign className="h-4 w-4" />} />
