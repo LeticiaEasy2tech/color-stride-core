@@ -98,27 +98,33 @@ const DEFAULT_DATE_OPTIONS: Option[] = [
 const DEFAULT_CLIENT_OPTIONS: Option[] = [
   { value: "all", label: "All clients" },
   { value: "arco", label: "ARCO/Murray" },
-  { value: "winkel", label: "Winkel Construction" },
   { value: "ajax", label: "AJAX Construction" },
-  { value: "tgsv", label: "TGSV Enterprises" },
+  { value: "prescott", label: "Prescott Carpentries" },
+  { value: "tracon", label: "Tracon Construction" },
   { value: "eco", label: "Eco Building" },
 ];
 
 const DEFAULT_STATUS_OPTIONS: Option[] = [
   { value: "all", label: "All statuses" },
-  { value: "active", label: "Active" },
+  { value: "open", label: "Open" },
   { value: "pending", label: "Pending" },
+  { value: "sent", label: "Sent" },
+  { value: "revision", label: "Revision" },
   { value: "awarded", label: "Awarded" },
+  { value: "approved", label: "Approved" },
   { value: "overdue", label: "Overdue" },
   { value: "closed", label: "Closed" },
 ];
 
 const DEFAULT_CATEGORY_OPTIONS: Option[] = [
   { value: "all", label: "All categories" },
-  { value: "estimate", label: "Estimate" },
-  { value: "proposal", label: "Proposal" },
-  { value: "change-order", label: "Change Order" },
-  { value: "billing", label: "Billing" },
+  { value: "painting", label: "Painting" },
+  { value: "specialty", label: "Specialty Finishes" },
+  { value: "wallcovering", label: "Wallcovering" },
+  { value: "equipment", label: "Equipment" },
+  { value: "misc", label: "Miscellaneous" },
+  { value: "financial", label: "Financial" },
+  { value: "pm", label: "Project Management" },
 ];
 
 export function FilterBar({
