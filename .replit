@@ -56,4 +56,4 @@ outputType = "webview"
 deploymentTarget = "autoscale"
 build = ["npm", "run", "build"]
 publicDir = "dist/client"
-run = ["npm", "run", "dev"]
+run = ["npm", "run", "preview"]
