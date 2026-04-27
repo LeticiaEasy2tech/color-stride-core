@@ -51,3 +51,8 @@ waitForPort = 5000
 
 [workflows.workflow.metadata]
 outputType = "webview"
+
+[deployment]
+deploymentTarget = "static"
+build = ["sh", "-c", "npm run build && cp dist/client/_shell.html dist/client/index.html"]
+publicDir = "dist/client"
