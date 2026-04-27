@@ -48,28 +48,34 @@ export type SavedView = {
 export const DEFAULT_SAVED_VIEWS: SavedView[] = [
   { id: "all", label: "All records", filters: {} },
   {
-    id: "my-open-jobs",
-    label: "My Open Jobs",
-    description: "Active jobs assigned to me",
-    filters: { status: "active" },
+    id: "my-open-items",
+    label: "My Open Items",
+    description: "Items currently open and assigned to me",
+    filters: { status: "open" },
   },
   {
     id: "pending-co",
     label: "Pending Change Orders",
     description: "Change orders awaiting approval",
-    filters: { status: "pending", category: "change-order" },
+    filters: { status: "pending", category: "pm" },
   },
   {
     id: "awarded-month",
     label: "Awarded This Month",
     description: "Won proposals in the last 30 days",
-    filters: { status: "awarded", dateRange: "30d" },
+    filters: { status: "awarded", dateRange: "month" },
   },
   {
     id: "overdue-billing",
     label: "Overdue Billing",
     description: "Invoices past due date",
-    filters: { status: "overdue", category: "billing" },
+    filters: { status: "overdue", category: "financial" },
+  },
+  {
+    id: "active-jobs",
+    label: "Active Jobs",
+    description: "Jobs currently in progress",
+    filters: { status: "open", category: "pm" },
   },
 ];
 
