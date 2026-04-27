@@ -78,15 +78,11 @@ function LoginPage() {
         </div>
 
         <div className="relative space-y-5 max-w-md">
-          <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-[10px] uppercase tracking-[0.16em] text-white/70">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
-            Internal system
-          </div>
           <h1 className="text-[2.6rem] leading-[1.05] font-semibold tracking-tight">
-            Budget Management System
+            Estimator Platform
           </h1>
           <p className="text-white/65 text-sm leading-relaxed max-w-sm">
-            Internal access for authorized users.
+            Estimating Platform
           </p>
         </div>
 
