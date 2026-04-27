@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ReportingRouteImport } from './routes/reporting'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as IntegrationsRouteImport } from './routes/integrations'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
@@ -34,6 +35,11 @@ import { Route as CrmContactsRouteImport } from './routes/crm.contacts'
 const ReportingRoute = ReportingRouteImport.update({
   id: '/reporting',
   path: '/reporting',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IntegrationsRoute = IntegrationsRouteImport.update({
@@ -141,6 +147,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/integrations': typeof IntegrationsRoute
+  '/login': typeof LoginRoute
   '/reporting': typeof ReportingRoute
   '/crm/contacts': typeof CrmContactsRoute
   '/crm/customers': typeof CrmCustomersRoute
@@ -164,6 +171,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/integrations': typeof IntegrationsRoute
+  '/login': typeof LoginRoute
   '/reporting': typeof ReportingRoute
   '/crm/contacts': typeof CrmContactsRoute
   '/crm/customers': typeof CrmCustomersRoute
@@ -188,6 +196,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/integrations': typeof IntegrationsRoute
+  '/login': typeof LoginRoute
   '/reporting': typeof ReportingRoute
   '/crm/contacts': typeof CrmContactsRoute
   '/crm/customers': typeof CrmCustomersRoute
@@ -213,6 +222,7 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/integrations'
+    | '/login'
     | '/reporting'
     | '/crm/contacts'
     | '/crm/customers'
@@ -236,6 +246,7 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/integrations'
+    | '/login'
     | '/reporting'
     | '/crm/contacts'
     | '/crm/customers'
@@ -259,6 +270,7 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/integrations'
+    | '/login'
     | '/reporting'
     | '/crm/contacts'
     | '/crm/customers'
@@ -283,6 +295,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRoute
   IntegrationsRoute: typeof IntegrationsRoute
+  LoginRoute: typeof LoginRoute
   ReportingRoute: typeof ReportingRoute
   CrmContactsRoute: typeof CrmContactsRoute
   CrmCustomersRoute: typeof CrmCustomersRoute
@@ -310,6 +323,13 @@ declare module '@tanstack/react-router' {
       path: '/reporting'
       fullPath: '/reporting'
       preLoaderRoute: typeof ReportingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/integrations': {
@@ -459,6 +479,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRoute,
   IntegrationsRoute: IntegrationsRoute,
+  LoginRoute: LoginRoute,
   ReportingRoute: ReportingRoute,
   CrmContactsRoute: CrmContactsRoute,
   CrmCustomersRoute: CrmCustomersRoute,

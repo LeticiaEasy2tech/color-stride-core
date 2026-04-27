@@ -1,7 +1,17 @@
-import { Outlet, Link, createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
+import {
+  Outlet,
+  Link,
+  createRootRoute,
+  HeadContent,
+  Scripts,
+  useRouterState,
+  useNavigate,
+} from "@tanstack/react-router";
+import { useEffect } from "react";
 
 import appCss from "../styles.css?url";
 import { AppShell } from "@/components/app/app-shell";
+import { AuthProvider, useAuth } from "@/lib/auth";
 
 function NotFoundComponent() {
   return (
@@ -79,5 +89,42 @@ function RootShell({ children }: { children: React.ReactNode }) {
 }
 
 function RootComponent() {
+  return (
+    <AuthProvider>
+      <RootRouter />
+    </AuthProvider>
+  );
+}
+
+function RootRouter() {
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const { isAuthenticated, isReady } = useAuth();
+  const navigate = useNavigate();
+  const isLoginRoute = pathname === "/login";
+
+  useEffect(() => {
+    if (!isReady) return;
+    if (!isAuthenticated && !isLoginRoute) {
+      navigate({ to: "/login" });
+    }
+  }, [isReady, isAuthenticated, isLoginRoute, navigate]);
+
+  if (!isReady) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-muted border-t-[var(--accent)]" />
+      </div>
+    );
+  }
+
+  if (isLoginRoute) {
+    return <Outlet />;
+  }
+
+  if (!isAuthenticated) {
+    // While the redirect effect runs, render nothing to avoid flashing protected UI.
+    return null;
+  }
+
   return <AppShell />;
 }
