@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useEffect, useState, type FormEvent } from "react";
-import { Building2, Loader2, Lock, Mail, ShieldCheck } from "lucide-react";
+import { Loader2, Lock, Mail, ShieldCheck, Building2 } from "lucide-react";
 import logo from "@/assets/logo.png";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
