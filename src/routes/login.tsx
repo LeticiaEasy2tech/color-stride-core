@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useEffect, useState, type FormEvent } from "react";
-import { Building2, Loader2, Lock, Mail, ShieldCheck } from "lucide-react";
+import { Loader2, Lock, Mail, ShieldCheck, Building2 } from "lucide-react";
 import logo from "@/assets/logo.png";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -48,53 +48,54 @@ function LoginPage() {
 
   return (
     <div className="min-h-screen w-full grid lg:grid-cols-2 bg-background">
-      {/* Left – brand panel */}
-      <div className="relative hidden lg:flex flex-col justify-between overflow-hidden bg-[var(--primary)] text-white p-10">
+      {/* Left – corporate identity panel */}
+      <div className="relative hidden lg:flex flex-col justify-between overflow-hidden bg-[var(--primary)] text-white p-12">
         <div
           aria-hidden
-          className="absolute inset-0 opacity-30"
+          className="absolute inset-0 opacity-[0.18]"
           style={{
-            background:
-              "radial-gradient(60% 50% at 20% 10%, rgba(37,99,235,0.55) 0%, transparent 60%), radial-gradient(50% 40% at 90% 90%, rgba(37,99,235,0.35) 0%, transparent 60%)",
+            backgroundImage:
+              "linear-gradient(rgba(255,255,255,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.08) 1px, transparent 1px)",
+            backgroundSize: "48px 48px",
           }}
         />
+        <div
+          aria-hidden
+          className="absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(70% 55% at 15% 0%, rgba(255,255,255,0.10) 0%, transparent 60%)",
+          }}
+        />
+
         <div className="relative flex items-center gap-3">
-          <div className="h-10 w-10 rounded-md bg-white/10 p-1.5 backdrop-blur">
+          <div className="h-9 w-9 rounded-md bg-white/10 p-1.5 ring-1 ring-white/15 backdrop-blur">
             <img src={logo} alt="" className="h-full w-full object-contain" />
           </div>
-          <div className="leading-tight">
-            <div className="text-sm font-semibold">New Touch of Color</div>
-            <div className="text-[11px] uppercase tracking-wider text-white/60">
-              Budget Management System
-            </div>
+          <div className="text-[11px] uppercase tracking-[0.18em] text-white/70">
+            New Touch of Color
           </div>
         </div>
 
-        <div className="relative space-y-6 max-w-md">
-          <h1 className="text-4xl font-semibold leading-tight font-[var(--font-display)]">
-            Construction estimating, sales pipeline & financials in one premium workspace.
+        <div className="relative space-y-5 max-w-md">
+          <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-[10px] uppercase tracking-[0.16em] text-white/70">
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+            Internal system
+          </div>
+          <h1 className="text-[2.6rem] leading-[1.05] font-semibold tracking-tight">
+            Budget Management System
           </h1>
-          <p className="text-white/70 text-sm leading-relaxed">
-            From bid to billing — manage estimates, proposals, change orders, and
-            profitability with the clarity your team deserves.
+          <p className="text-white/65 text-sm leading-relaxed max-w-sm">
+            Internal access for authorized users.
           </p>
-          <div className="grid grid-cols-3 gap-4 pt-4">
-            {[
-              { k: "Active Bids", v: "42" },
-              { k: "Win Rate", v: "38%" },
-              { k: "Pipeline", v: "$12.4M" },
-            ].map((s) => (
-              <div key={s.k} className="rounded-lg border border-white/10 bg-white/5 px-3 py-2.5 backdrop-blur">
-                <div className="text-lg font-semibold">{s.v}</div>
-                <div className="text-[10px] uppercase tracking-wider text-white/60">{s.k}</div>
-              </div>
-            ))}
-          </div>
         </div>
 
-        <div className="relative flex items-center gap-2 text-xs text-white/60">
-          <ShieldCheck className="h-4 w-4" />
-          Enterprise-grade security · SOC 2 ready architecture
+        <div className="relative flex items-center justify-between text-[11px] text-white/55">
+          <div className="flex items-center gap-2">
+            <ShieldCheck className="h-3.5 w-3.5" />
+            Secure project, estimating and financial operations.
+          </div>
+          <div className="hidden xl:block">v1.0</div>
         </div>
       </div>
 
@@ -109,9 +110,9 @@ function LoginPage() {
           </div>
 
           <div className="space-y-1.5 mb-8">
-            <h2 className="text-2xl font-semibold tracking-tight">Welcome back</h2>
+            <h2 className="text-2xl font-semibold tracking-tight">Sign in</h2>
             <p className="text-sm text-muted-foreground">
-              Sign in to your Budget Management workspace.
+              Authorized personnel only. Use your company credentials.
             </p>
           </div>
 
