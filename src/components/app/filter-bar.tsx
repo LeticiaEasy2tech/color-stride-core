@@ -89,10 +89,12 @@ export type FilterBarProps = {
 
 const DEFAULT_DATE_OPTIONS: Option[] = [
   { value: "any", label: "Any time" },
-  { value: "7d", label: "Last 7 days" },
-  { value: "30d", label: "Last 30 days" },
-  { value: "qtd", label: "Quarter to date" },
-  { value: "ytd", label: "Year to date" },
+  { value: "today", label: "Today" },
+  { value: "week", label: "This Week" },
+  { value: "month", label: "This Month" },
+  { value: "30d", label: "Last 30 Days" },
+  { value: "quarter", label: "This Quarter" },
+  { value: "custom", label: "Custom" },
 ];
 
 const DEFAULT_CLIENT_OPTIONS: Option[] = [
