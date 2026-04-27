@@ -1,8 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useMemo } from "react";
 import { PageHeader } from "@/components/app/page-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { budgetVsActual } from "@/lib/mock-data";
 import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { FilterBar, useFilterBar } from "@/components/app/filter-bar";
 
 export const Route = createFileRoute("/financial/budget")({
   component: Budget,
@@ -10,12 +12,18 @@ export const Route = createFileRoute("/financial/budget")({
 });
 
 function Budget() {
-  const totalBudget = budgetVsActual.reduce((s, b) => s + b.budget, 0);
-  const totalActual = budgetVsActual.reduce((s, b) => s + b.actual, 0);
+  const [filters, setFilters] = useFilterBar();
+  const data = useMemo(() => {
+    const q = filters.search.trim().toLowerCase();
+    return budgetVsActual.filter((b) => !q || b.name.toLowerCase().includes(q));
+  }, [filters]);
+  const totalBudget = data.reduce((s, b) => s + b.budget, 0);
+  const totalActual = data.reduce((s, b) => s + b.actual, 0);
   const variance = totalBudget - totalActual;
   return (
     <div className="space-y-6">
       <PageHeader title="Budget vs Actual" description="Job-level cost tracking with variance and forecast." />
+      <FilterBar value={filters} onChange={setFilters} searchPlaceholder="Search cost categories…" />
       <div className="grid grid-cols-3 gap-4">
         <Card className="border-border shadow-[var(--shadow-card)]">
           <CardContent className="p-4">
@@ -43,7 +51,7 @@ function Budget() {
         <CardHeader className="pb-2"><CardTitle className="text-sm">By Cost Category</CardTitle></CardHeader>
         <CardContent>
           <ResponsiveContainer width="100%" height={320}>
-            <BarChart data={budgetVsActual} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+            <BarChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
               <XAxis dataKey="name" stroke="var(--muted-foreground)" fontSize={12} tickLine={false} axisLine={false} />
               <YAxis stroke="var(--muted-foreground)" fontSize={12} tickLine={false} axisLine={false} />
