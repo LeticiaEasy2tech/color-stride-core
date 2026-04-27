@@ -40,6 +40,14 @@ import {
   alerts,
 } from "@/lib/mock-data";
 
+const CHART = {
+  accent: "#2563EB",
+  primary: "#0F172A",
+  success: "#16A34A",
+  border: "#E2E8F0",
+  muted: "#64748B",
+};
+
 export const Route = createFileRoute("/")({
   component: Index,
   head: () => ({
@@ -100,20 +108,20 @@ function Index() {
               <AreaChart data={revenueTrend} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <defs>
                   <linearGradient id="rev" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="var(--accent)" stopOpacity={0.35} />
-                    <stop offset="100%" stopColor="var(--accent)" stopOpacity={0} />
+                    <stop offset="0%" stopColor={CHART.accent} stopOpacity={0.35} />
+                    <stop offset="100%" stopColor={CHART.accent} stopOpacity={0} />
                   </linearGradient>
                   <linearGradient id="fc" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="var(--success)" stopOpacity={0.25} />
-                    <stop offset="100%" stopColor="var(--success)" stopOpacity={0} />
+                    <stop offset="0%" stopColor={CHART.success} stopOpacity={0.25} />
+                    <stop offset="100%" stopColor={CHART.success} stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
-                <XAxis dataKey="m" stroke="var(--muted-foreground)" fontSize={12} tickLine={false} axisLine={false} />
-                <YAxis stroke="var(--muted-foreground)" fontSize={12} tickLine={false} axisLine={false} />
-                <Tooltip contentStyle={{ borderRadius: 8, border: "1px solid var(--border)", fontSize: 12 }} />
-                <Area type="monotone" dataKey="forecast" stroke="var(--success)" fill="url(#fc)" strokeWidth={2} />
-                <Area type="monotone" dataKey="revenue" stroke="var(--accent)" fill="url(#rev)" strokeWidth={2} />
+                <CartesianGrid strokeDasharray="3 3" stroke={CHART.border} vertical={false} />
+                <XAxis dataKey="m" stroke={CHART.muted} fontSize={12} tickLine={false} axisLine={false} />
+                <YAxis stroke={CHART.muted} fontSize={12} tickLine={false} axisLine={false} />
+                <Tooltip contentStyle={{ borderRadius: 8, border: `1px solid ${CHART.border}`, fontSize: 12 }} />
+                <Area type="monotone" dataKey="forecast" stroke={CHART.success} fill="url(#fc)" strokeWidth={2} />
+                <Area type="monotone" dataKey="revenue" stroke={CHART.accent} fill="url(#rev)" strokeWidth={2} />
               </AreaChart>
             </ResponsiveContainer>
           </CardContent>
@@ -127,13 +135,13 @@ function Index() {
           <CardContent className="pt-2">
             <ResponsiveContainer width="100%" height={260}>
               <BarChart data={budgetVsActual} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
-                <XAxis dataKey="name" stroke="var(--muted-foreground)" fontSize={11} tickLine={false} axisLine={false} />
-                <YAxis stroke="var(--muted-foreground)" fontSize={11} tickLine={false} axisLine={false} />
-                <Tooltip contentStyle={{ borderRadius: 8, border: "1px solid var(--border)", fontSize: 12 }} />
+                <CartesianGrid strokeDasharray="3 3" stroke={CHART.border} vertical={false} />
+                <XAxis dataKey="name" stroke={CHART.muted} fontSize={11} tickLine={false} axisLine={false} />
+                <YAxis stroke={CHART.muted} fontSize={11} tickLine={false} axisLine={false} />
+                <Tooltip contentStyle={{ borderRadius: 8, border: `1px solid ${CHART.border}`, fontSize: 12 }} />
                 <Legend wrapperStyle={{ fontSize: 11 }} />
-                <Bar dataKey="budget" fill="var(--accent)" radius={[4, 4, 0, 0]} />
-                <Bar dataKey="actual" fill="var(--primary)" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="budget" fill={CHART.accent} radius={[4, 4, 0, 0]} />
+                <Bar dataKey="actual" fill={CHART.primary} radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>
