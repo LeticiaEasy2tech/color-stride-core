@@ -1,9 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useMemo } from "react";
 import { PageHeader } from "@/components/app/page-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
+import { FilterBar, useFilterBar } from "@/components/app/filter-bar";
 
 export const Route = createFileRoute("/projects/change-orders")({
   component: ChangeOrders,
@@ -24,6 +26,17 @@ const tone: Record<string, string> = {
 };
 
 function ChangeOrders() {
+  const [filters, setFilters] = useFilterBar();
+  const visible = useMemo(() => {
+    const q = filters.search.trim().toLowerCase();
+    return cos.filter((c) => {
+      if (q && !`${c.id} ${c.project} ${c.desc}`.toLowerCase().includes(q)) return false;
+      if (filters.status === "pending" && c.status !== "Pending") return false;
+      if (filters.status === "approved" && c.status !== "Approved") return false;
+      if (filters.view === "pending-co" && c.status !== "Pending") return false;
+      return true;
+    });
+  }, [filters]);
   return (
     <div className="space-y-6">
       <PageHeader
@@ -35,6 +48,7 @@ function ChangeOrders() {
           </Button>
         }
       />
+      <FilterBar value={filters} onChange={setFilters} searchPlaceholder="Search change orders…" />
       <Card className="border-border shadow-[var(--shadow-card)]">
         <CardHeader className="pb-2"><CardTitle className="text-sm">All Change Orders</CardTitle></CardHeader>
         <CardContent className="p-0">
@@ -49,7 +63,7 @@ function ChangeOrders() {
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
-              {cos.map((c) => (
+              {visible.map((c) => (
                 <tr key={c.id} className="hover:bg-muted/30">
                   <td className="px-4 py-2.5 font-mono text-xs">{c.id}</td>
                   <td className="px-4 py-2.5 font-medium">{c.project}</td>
