@@ -104,8 +104,7 @@ function Index() {
             <Badge variant="secondary" className="text-xs">USD (k)</Badge>
           </CardHeader>
           <CardContent className="pt-2">
-            <div className="h-[260px] w-full">
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height={260} minWidth={0}>
               <AreaChart data={revenueTrend} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <defs>
                   <linearGradient id="rev" x1="0" y1="0" x2="0" y2="1">
@@ -125,7 +124,6 @@ function Index() {
                 <Area type="monotone" dataKey="revenue" stroke={CHART.accent} fill="url(#rev)" strokeWidth={2} />
               </AreaChart>
             </ResponsiveContainer>
-            </div>
           </CardContent>
         </Card>
 
@@ -135,8 +133,7 @@ function Index() {
             <p className="text-xs text-muted-foreground">Active jobs aggregate</p>
           </CardHeader>
           <CardContent className="pt-2">
-            <div className="h-[260px] w-full">
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height={260} minWidth={0}>
               <BarChart data={budgetVsActual} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke={CHART.border} vertical={false} />
                 <XAxis dataKey="name" stroke={CHART.muted} fontSize={11} tickLine={false} axisLine={false} />
@@ -147,7 +144,6 @@ function Index() {
                 <Bar dataKey="actual" fill={CHART.primary} radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
-            </div>
           </CardContent>
         </Card>
       </div>
