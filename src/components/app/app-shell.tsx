@@ -1,4 +1,4 @@
-import { Link, useRouterState, Outlet } from "@tanstack/react-router";
+import { Link, useRouterState, useNavigate, Outlet } from "@tanstack/react-router";
 import {
   LayoutDashboard,
   Users,
@@ -13,12 +13,24 @@ import {
   Bell,
   Plus,
   ChevronDown,
+  LogOut,
+  User as UserIcon,
+  Settings,
 } from "lucide-react";
 import logo from "@/assets/logo.png";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useAuth } from "@/lib/auth";
 
 type NavItem = { label: string; to: string; icon: any };
 type NavGroup = { label: string; items: NavItem[] };
@@ -100,6 +112,16 @@ function SidebarLink({ item }: { item: NavItem }) {
 }
 
 export function AppShell() {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    logout();
+    navigate({ to: "/login" });
+  };
+  const initials = user?.initials ?? "JM";
+  const name = user?.name ?? "Jordan Miller";
+  const role = user?.role ?? "Administrator";
+  const email = user?.email ?? "demo@ntoc.com";
   return (
     <div className="flex min-h-screen w-full bg-background">
       {/* Sidebar */}
@@ -128,16 +150,41 @@ export function AppShell() {
           ))}
         </nav>
         <div className="border-t border-sidebar-border p-3">
-          <div className="flex items-center gap-2 rounded-md bg-sidebar-accent/40 px-2.5 py-2">
-            <Avatar className="h-7 w-7">
-              <AvatarFallback className="bg-[var(--accent)] text-white text-xs">JM</AvatarFallback>
-            </Avatar>
-            <div className="flex-1 min-w-0">
-              <div className="text-xs font-medium text-white truncate">Jordan Miller</div>
-              <div className="text-[10px] text-sidebar-foreground/60 truncate">Administrator</div>
-            </div>
-            <ChevronDown className="h-3.5 w-3.5 text-sidebar-foreground/60" />
-          </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="w-full flex items-center gap-2 rounded-md bg-sidebar-accent/40 hover:bg-sidebar-accent/70 transition-colors px-2.5 py-2 text-left">
+                <Avatar className="h-7 w-7">
+                  <AvatarFallback className="bg-[var(--accent)] text-white text-xs">
+                    {initials}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="flex-1 min-w-0">
+                  <div className="text-xs font-medium text-white truncate">{name}</div>
+                  <div className="text-[10px] text-sidebar-foreground/60 truncate">{role}</div>
+                </div>
+                <ChevronDown className="h-3.5 w-3.5 text-sidebar-foreground/60" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" side="top" className="w-56">
+              <DropdownMenuLabel className="font-normal">
+                <div className="flex flex-col">
+                  <span className="text-sm font-medium">{name}</span>
+                  <span className="text-xs text-muted-foreground">{email}</span>
+                </div>
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>
+                <UserIcon className="h-4 w-4 mr-2" /> Profile
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Settings className="h-4 w-4 mr-2" /> Settings
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onSelect={handleLogout} className="text-destructive focus:text-destructive">
+                <LogOut className="h-4 w-4 mr-2" /> Log out
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </aside>
 
@@ -161,9 +208,36 @@ export function AppShell() {
                 3
               </Badge>
             </Button>
-            <Avatar className="h-8 w-8">
-              <AvatarFallback className="bg-[var(--primary)] text-white text-xs">JM</AvatarFallback>
-            </Avatar>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]">
+                  <Avatar className="h-8 w-8">
+                    <AvatarFallback className="bg-[var(--primary)] text-white text-xs">
+                      {initials}
+                    </AvatarFallback>
+                  </Avatar>
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuLabel className="font-normal">
+                  <div className="flex flex-col">
+                    <span className="text-sm font-medium">{name}</span>
+                    <span className="text-xs text-muted-foreground">{email}</span>
+                  </div>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>
+                  <UserIcon className="h-4 w-4 mr-2" /> Profile
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Settings className="h-4 w-4 mr-2" /> Settings
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onSelect={handleLogout} className="text-destructive focus:text-destructive">
+                  <LogOut className="h-4 w-4 mr-2" /> Log out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </header>
         <main className="flex-1 p-4 lg:p-6">
