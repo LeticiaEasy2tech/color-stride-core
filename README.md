@@ -1,11 +1,14 @@
-# New Touch of Color — Budget Management System
+# New Touch of Color — Estimator Platform
 
-A premium frontend prototype for a construction ERP / estimating / CRM platform.
-Built with **React 19 + TypeScript + Vite + Tailwind v4 + shadcn/ui + TanStack Router/Start + Recharts**.
+A premium **frontend prototype** for an internal construction estimating, CRM,
+project management, and financial operations platform built for **New Touch of
+Color**. This codebase is the client-ready demo; backend integration will be
+performed in Replit after handoff.
 
-This repository ships **front-end only** with mock data and mock authentication.
-It is intentionally architected to be exported to GitHub and continued in Replit
-for backend integration.
+> ⚠️ **Mock data only.** All KPIs, customers, pipeline entries, projects,
+> invoices, and reports are loaded from `src/lib/mock-data.ts`. Authentication
+> is mocked in `src/lib/auth.tsx` and persisted in `localStorage` /
+> `sessionStorage`. No external services are called.
 
 ---
 
@@ -16,83 +19,86 @@ for backend integration.
 | Email    | `demo@ntoc.com`   |
 | Password | `demo123`         |
 
-Auth state is persisted in `localStorage` (or `sessionStorage` if "Remember me"
-is unchecked). All app routes are protected and redirect unauthenticated users
-to `/login`. Use the user menu in the sidebar (or the avatar in the topbar) to
-log out.
+All routes are protected and redirect unauthenticated users to `/login`.
+
+---
+
+## 🧱 Tech stack
+
+- **React 19** + **TypeScript**
+- **Vite 7** (dev server + build)
+- **TanStack Router / Start v1** — file-based routing in `src/routes/`
+- **TanStack Query** — ready for data fetching when backend is wired
+- **Tailwind CSS v4** — design tokens in `src/styles.css` (`oklch` palette)
+- **shadcn/ui** (Radix primitives) — components in `src/components/ui/`
+- **Recharts** — charts on the Dashboard / Reporting screens
+- **Lucide React** — icon set
+- **Zod**, **react-hook-form**, **date-fns**, **sonner**
 
 ---
 
 ## 🚀 Run locally
 
 ```bash
-npm install      # or: bun install / pnpm install
-npm run dev      # starts Vite on http://localhost:8080
+npm install
+npm run dev          # http://localhost:8080
 ```
 
-> The dev server uses TanStack Start with file-based routing in `src/routes/`.
-> The route tree (`src/routeTree.gen.ts`) is regenerated automatically on save.
-
-### Build & preview
+### Other scripts
 
 ```bash
 npm run build        # production build
-npm run preview      # preview the built app
+npm run preview      # preview the production build
+npm run lint         # eslint
+npm run format       # prettier --write .
 ```
 
 ---
 
 ## 🧰 Run in Replit
 
-1. **Create a new Repl** → "Import from GitHub" and paste this repository URL.
-2. Replit will auto-detect Node. If it asks for a template, pick **Node.js**.
-3. Open the **Shell** and run:
+1. **Create a new Repl** → *Import from GitHub* and paste the repository URL.
+2. When prompted for a template, choose **Node.js** (Node 20+).
+3. In the Replit Shell:
    ```bash
    npm install
    npm run dev
    ```
-4. Replit exposes the dev server on its built-in webview. The Vite config
-   already binds to `0.0.0.0` and uses `strictPort`, which Replit needs.
-5. Open the webview and navigate to `/login` if you are not redirected
-   automatically.
+4. Replit will expose port `8080` on its built-in webview. Vite is configured
+   to bind to `0.0.0.0` with `strictPort`, which Replit needs.
+5. Open the webview — you'll be redirected to `/login`. Use the demo
+   credentials above.
 
-### Optional `.replit` file
-
-Create a file named `.replit` at the repo root with:
+A `.replit` file is included at the repo root:
 
 ```toml
 run = "npm run dev"
 entrypoint = "src/routes/index.tsx"
-
-[nix]
-channel = "stable-24_05"
+modules = ["nodejs-20"]
 
 [[ports]]
 localPort = 8080
 externalPort = 80
 ```
 
-> No Cloudflare Wrangler / Workers commands are needed to run the prototype.
-> The Cloudflare adapter listed in dependencies is only used for the hosted
-> Lovable preview deployment and is a no-op in local/Replit dev.
-
 ---
 
 ## 🔑 Environment variables
 
-The prototype runs **with zero environment variables** because all data is mocked.
-When you wire a real backend, create a `.env.local` (gitignored) with values like:
+The prototype runs with **zero environment variables**. When you start wiring a
+real backend in Replit, copy `.env.example` to `.env.local` and fill in:
 
 ```bash
 VITE_API_URL=https://api.example.com
 VITE_AUTH_DOMAIN=auth.example.com
 ```
 
-Vite only exposes variables prefixed with `VITE_` to the client.
+Only variables prefixed with `VITE_` are exposed to the client. Store secrets
+(API keys, OAuth client secrets) in **Replit Secrets**, never commit them.
 
 ---
 
-## 📂 Project structure (GitHub export)
+## 📂 Folder structure
 
 ```
 .
@@ -100,22 +106,23 @@ Vite only exposes variables prefixed with `VITE_` to the client.
 ├── package.json
 ├── vite.config.ts
 ├── tsconfig.json
-├── tailwind.config (via styles.css @theme)
 ├── components.json              # shadcn/ui config
+├── .env.example
+├── .replit
 └── src/
-    ├── assets/                  # logo, images
     ├── components/
-    │   ├── app/                 # AppShell, PageHeader, StatCard
+    │   ├── app/                 # AppShell, PageHeader, StatCard, FilterBar
     │   └── ui/                  # shadcn/ui primitives
     ├── hooks/
+    │   └── use-mobile.tsx
     ├── lib/
-    │   ├── auth.tsx             # mock auth context (localStorage)
-    │   ├── mock-data.ts         # all KPIs, customers, pipeline, financials
+    │   ├── auth.tsx             # 🔌 mock auth — replace with real provider
+    │   ├── mock-data.ts         # 🔌 all demo data — replace with API hooks
     │   └── utils.ts
     ├── routes/                  # file-based routes (TanStack Router)
-    │   ├── __root.tsx           # root shell + AuthProvider + guard
-    │   ├── index.tsx            # Dashboard
-    │   ├── login.tsx            # Login page
+    │   ├── __root.tsx           # root shell + AuthProvider + route guard
+    │   ├── index.tsx            # Executive Dashboard
+    │   ├── login.tsx
     │   ├── crm.customers.tsx
     │   ├── crm.contacts.tsx
     │   ├── crm.leads.tsx
@@ -137,22 +144,22 @@ Vite only exposes variables prefixed with `VITE_` to the client.
     │   ├── integrations.tsx
     │   └── admin.tsx
     ├── router.tsx
-    ├── routeTree.gen.ts         # auto-generated, do NOT edit
-    └── styles.css               # design tokens (oklch) + Tailwind v4 theme
+    ├── routeTree.gen.ts         # ⚠️ auto-generated — do NOT edit
+    └── styles.css               # design tokens + Tailwind v4 theme
 ```
 
 ---
 
-## 🗺️ Routes the client can demo
+## 🗺️ Routes
 
 | Route                          | Module                          |
 | ------------------------------ | ------------------------------- |
-| `/login`                       | Login (mock)                    |
+| `/login`                       | Login (mock auth)               |
 | `/`                            | Executive Dashboard             |
-| `/crm/customers`               | Customers (table + cards)       |
-| `/crm/contacts`                | Contacts grid                   |
+| `/crm/customers`               | Customers                       |
+| `/crm/contacts`                | Contacts                        |
 | `/crm/leads`                   | Lead scoring                    |
-| `/estimating/estimates`        | Estimate Builder (3-column)     |
+| `/estimating/estimates`        | Estimate Builder                |
 | `/estimating/cost-codes`       | CSI Cost Code library           |
 | `/estimating/proposal`         | Proposal generator              |
 | `/pipeline/tracking`           | Proposal Pipeline (Kanban)      |
@@ -166,40 +173,59 @@ Vite only exposes variables prefixed with `VITE_` to the client.
 | `/financial/invoices`          | Invoices                        |
 | `/financial/commitments`       | POs / subcontracts              |
 | `/financial/budget`            | Budget vs Actual                |
-| `/reporting`                   | Report builder canvas           |
+| `/reporting`                   | Report builder                  |
 | `/integrations`                | QuickBooks, DocuSign, etc.      |
 | `/admin`                       | Roles & users                   |
 
----
-
-## 🎨 Design system
-
-- **Colors** (oklch tokens in `src/styles.css`)
-  - Primary `#0F172A`, Accent `#2563EB`, Success `#16A34A`,
-    Warning `#F59E0B`, Danger `#DC2626`, Background `#F8FAFC`
-- **Typography**: Inter (body) + Space Grotesk (display)
-- **Components**: shadcn/ui (Radix primitives + Tailwind variants)
-- **Charts**: Recharts (with static-SVG fallbacks where needed)
+Every main module includes the reusable **FilterBar** (`src/components/app/filter-bar.tsx`)
+with Client / Status / Category / Date range / Saved Views controls.
 
 ---
 
-## 🔌 Wiring a real backend (next step in Replit)
+## 🔌 Where to connect a backend (next step in Replit)
 
-1. Replace the `DEMO_USER` flow in `src/lib/auth.tsx` with real API calls
-   (Supabase, Auth.js, or your own endpoint).
-2. Replace mock arrays in `src/lib/mock-data.ts` with TanStack Query hooks
-   that fetch from your API.
-3. Add server routes under `src/routes/api/` (TanStack Start server functions)
-   or call out to an external Node API hosted in the same Repl.
-4. Move secrets into Replit's **Secrets** panel — never commit `.env*` files.
+The codebase is intentionally structured so backend wiring touches **only two
+files**:
+
+1. **`src/lib/auth.tsx`** — replace the `DEMO_USER` flow with real auth
+   (Auth.js, Supabase, Clerk, or your own `/api/auth` endpoint). Keep the
+   `AuthProvider` / `useAuth` shape so the route guard in `__root.tsx` keeps
+   working.
+
+2. **`src/lib/mock-data.ts`** — replace each exported array/object with a
+   TanStack Query hook (`useQuery({ queryKey, queryFn })`). `QueryClient` is
+   already configured by TanStack Start.
+
+For server endpoints, you can either:
+
+- Add **server functions** under `src/routes/api/*.ts` using TanStack Start's
+  `createServerFn`, or
+- Run a separate Node API in the same Repl and call it via `VITE_API_URL`.
+
+Move all secrets into Replit's **Secrets** panel — never commit `.env*` files.
 
 ---
 
-## 📝 Notes
+## 📝 Notes & limitations
 
-- All charts degrade gracefully — if Recharts fails to mount, KPIs and
-  surrounding UI still render.
-- Routes are statically registered, so unknown URLs show the 404 page in
-  `__root.tsx`.
-- The app is fully responsive down to ~640px; the sidebar collapses on
-  smaller viewports.
+- **Mock data only.** Filters, saved views, and search operate on in-memory
+  arrays. Refreshing the page resets any local edits.
+- **Mock auth.** Any non-empty email/password combination is accepted at the
+  demo credentials only; tokens are stored in `localStorage` / `sessionStorage`.
+- **Charts** use Recharts and degrade gracefully — KPIs and surrounding UI
+  always render even if a chart fails to mount.
+- **Responsive** down to ~640px; the sidebar collapses on smaller viewports.
+- **404** unknown URLs render the not-found page defined in `src/routes/__root.tsx`.
+
+---
+
+## 📦 GitHub export → Replit import checklist
+
+- [x] Type check passes (`bunx tsc --noEmit`)
+- [x] All sidebar links resolve to existing routes
+- [x] Login flow works with demo credentials
+- [x] Mock data centralized in `src/lib/mock-data.ts`
+- [x] Reusable components in `src/components/app/`
+- [x] `.env.example` documents future backend variables
+- [x] `.replit` configured for Node 20 + port 8080
+- [x] `npm install && npm run dev` boots the app cleanly
