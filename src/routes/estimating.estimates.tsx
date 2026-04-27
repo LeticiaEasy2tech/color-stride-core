@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { useMemo, useState } from "react";
 import { costCodes, estimateLines, EstimateLine } from "@/lib/mock-data";
 import { ChevronRight, FileText, Save, Send, Plus, Copy, History } from "lucide-react";
+import { FilterBar, useFilterBar } from "@/components/app/filter-bar";
 
 export const Route = createFileRoute("/estimating/estimates")({
   component: EstimateBuilder,
@@ -16,6 +17,7 @@ export const Route = createFileRoute("/estimating/estimates")({
 function EstimateBuilder() {
   const [lines, setLines] = useState<EstimateLine[]>(estimateLines);
   const [markup, setMarkup] = useState(18);
+  const [filters, setFilters] = useFilterBar();
 
   const totals = useMemo(() => {
     const labor = lines.reduce((s, l) => s + l.qty * l.labor, 0);
@@ -49,6 +51,19 @@ function EstimateBuilder() {
             </Button>
           </>
         }
+      />
+
+      <FilterBar
+        value={filters}
+        onChange={setFilters}
+        searchPlaceholder="Search estimates, codes, line items…"
+        categoryOptions={[
+          { value: "all", label: "All trades" },
+          { value: "painting", label: "Painting & Coating" },
+          { value: "wallcover", label: "Wall Coverings" },
+          { value: "carpentry", label: "Carpentry" },
+          { value: "general", label: "General Conditions" },
+        ]}
       />
 
       <div className="grid grid-cols-12 gap-4">
