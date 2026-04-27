@@ -1,9 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useMemo } from "react";
 import { PageHeader } from "@/components/app/page-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Plus, MessageSquare } from "lucide-react";
+import { FilterBar, useFilterBar } from "@/components/app/filter-bar";
 
 export const Route = createFileRoute("/projects/rfis")({
   component: RFIs,
@@ -24,6 +26,16 @@ const tone: Record<string, string> = {
 };
 
 function RFIs() {
+  const [filters, setFilters] = useFilterBar();
+  const visible = useMemo(() => {
+    const q = filters.search.trim().toLowerCase();
+    return rfis.filter((r) => {
+      if (q && !`${r.id} ${r.project} ${r.q}`.toLowerCase().includes(q)) return false;
+      if (filters.status === "open" && r.status !== "Open") return false;
+      if (filters.status === "closed" && r.status !== "Closed") return false;
+      return true;
+    });
+  }, [filters]);
   return (
     <div className="space-y-6">
       <PageHeader
@@ -35,8 +47,9 @@ function RFIs() {
           </Button>
         }
       />
+      <FilterBar value={filters} onChange={setFilters} searchPlaceholder="Search RFIs…" />
       <div className="grid gap-3">
-        {rfis.map((r) => (
+        {visible.map((r) => (
           <Card key={r.id} className="border-border shadow-[var(--shadow-card)]">
             <CardHeader className="pb-2 flex flex-row items-center justify-between">
               <CardTitle className="text-sm flex items-center gap-2">
