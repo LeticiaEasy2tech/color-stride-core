@@ -61,7 +61,6 @@ export const getRouter = () => {
     scrollRestoration: true,
     defaultPreloadStaleTime: 0,
     defaultErrorComponent: DefaultErrorComponent,
-    defaultSsr: false,
   });
 
   return router;
